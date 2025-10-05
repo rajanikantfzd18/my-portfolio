@@ -1,7 +1,16 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import './index.css';
 
+import { ref, push } from "firebase/database";
+import { db } from "./firebaseConfig";
+import { useState } from 'react';
+
 function App() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const menuItems = ['Home', 'About', 'Projects', 'Skills', 'Databases', 'Platforms', 'Contact'];
+
   return (
     <div className="bg-gradient-to-b from-gray-900 to-gray-800 text-white min-h-screen font-sans scroll-smooth">
       {/* Navbar */}
@@ -9,30 +18,109 @@ function App() {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className="bg-gray-900 p-4 fixed w-full top-0 z-20 shadow-lg"
+        className="bg-gray-900 p-4 fixed w-full top-0 z-50 shadow-lg"
       >
-        <ul className="flex flex-wrap gap-6 justify-center text-sm md:text-base">
-          {['Home', 'About', 'Projects', 'Skills', 'Contact'].map((item) => (
-            <motion.li
-              key={item}
-              whileHover={{ scale: 1.1 }}
-              transition={{ type: 'spring', stiffness: 300 }}
+        <div className="flex justify-between items-center">
+          {/* Logo/Name */}
+          <motion.div
+            whileHover={{ scale: 1.05 }}
+            className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent"
+          >
+            Personal Portfolio
+          </motion.div>
+
+          {/* Desktop Menu - Hidden on mobile */}
+          <div className="hidden md:flex">
+            <ul className="flex gap-6 justify-center text-sm md:text-base">
+              {menuItems.map((item) => (
+                <motion.li
+                  key={item}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                >
+                  <a 
+                    href={`#${item.toLowerCase()}`} 
+                    className="text-gray-300 hover:text-blue-400 transition duration-300"
+                  >
+                    {item}
+                  </a>
+                </motion.li>
+              ))}
+              <motion.li whileHover={{ scale: 1.1 }} transition={{ type: 'spring', stiffness: 300 }}>
+                <a
+                  href="https://drive.google.com/file/d/1xvxrE19qJBUMi7JLY5rDshYwkv4cgwRk/view?usp=sharing"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-green-400 hover:text-green-300 font-semibold transition duration-300"
+                >
+                  <i className="fas fa-file-download mr-2"></i>Resume Download
+                </a>
+              </motion.li>
+            </ul>
+          </div>
+
+          {/* Mobile Menu Button - Visible only on mobile */}
+          <div className="md:hidden">
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-gray-300 hover:text-blue-400 focus:outline-none p-2"
             >
-              <a href={`#${item.toLowerCase()}`} className="text-gray-300 hover:text-blue-400 transition duration-300">
-                {item}
-              </a>
-            </motion.li>
-          ))}
-          <motion.li whileHover={{ scale: 1.1 }} transition={{ type: 'spring', stiffness: 300 }}>
-            <a
-              href="https://drive.google.com/file/d/1xvxrE19qJBUMi7JLY5rDshYwkv4cgwRk/view?usp=sharing"
-              target="_blank"
-              className="text-green-400 hover:text-green-300 font-semibold transition duration-300"
+              {isMenuOpen ? (
+                <i className="fas fa-times text-2xl"></i> // Close icon
+              ) : (
+                <i className="fas fa-bars text-2xl"></i> // Hamburger icon
+              )}
+            </motion.button>
+          </div>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden bg-gray-800 mt-4 rounded-lg overflow-hidden"
             >
-              <i className="fas fa-file-download mr-2"></i>Resume Download
-            </a>
-          </motion.li>
-        </ul>
+              <ul className="flex flex-col p-4 space-y-4">
+                {menuItems.map((item) => (
+                  <motion.li
+                    key={item}
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: menuItems.indexOf(item) * 0.1 }}
+                  >
+                    <a 
+                      href={`#${item.toLowerCase()}`} 
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-gray-300 hover:text-blue-400 transition duration-300 py-2 border-b border-gray-700"
+                    >
+                      {item}
+                    </a>
+                  </motion.li>
+                ))}
+                <motion.li
+                  initial={{ x: -20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: menuItems.length * 0.1 }}
+                >
+                  <a
+                    href="https://drive.google.com/file/d/1xvxrE19qJBUMi7JLY5rDshYwkv4cgwRk/view?usp=sharing"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block text-green-400 hover:text-green-300 font-semibold transition duration-300 py-2"
+                  >
+                    <i className="fas fa-file-download mr-2"></i>Resume Download
+                  </a>
+                </motion.li>
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.nav>
 
       {/* Home Section */}
@@ -89,9 +177,9 @@ function App() {
             { title: 'Retail Bazaar', desc: '8 Minutes Delivery App with Flutter', link: '#' },
             { title: 'Talkify', desc: 'Chatting App built with Java for Android', link: '#' },
             { title: 'BYA', desc: 'Book Your Appointment app using Java for Android', link: '#' },
-            { title: 'Calculator', desc: 'iOS-style Calculator app for Android using Java', link: '#' },
-            { title: 'Portfolio Website', desc: 'Personal portfolio using React Js and Tailwind CSS', link: '#' },
-            { title: 'College Website', desc: 'Responsive website using HTML, CSS, JavaScript', link: '#' },
+            { title: 'Hospital Website', desc: 'Responsive website using React.js and Tailwind CSS, with a clean modern UI', link: 'https://sangamhospitals.com/' },
+            { title: 'Corporate Website', desc: 'Responsive website using React.js and Tailwind CSS, with a clean modern UI', link: 'https://raisonconsultancyservices.com/' },
+            { title: 'ARKON', desc: 'Personal AI Assistant using Python with Tkinter and OpenAI API', link: '#' },
             { title: 'Student Attendance System', desc: 'IoT-based system using NodeMCU 8266', link: '#' },
             { title: 'Traffic Light Control', desc: 'Arduino UNO-based traffic management system', link: '#' },
             { title: 'Home Automation', desc: 'Fan and Light Control with NodeMCU 8266', link: '#' },
@@ -122,25 +210,77 @@ function App() {
         className="p-8 text-center"
       >
         <h2 className="text-3xl md:text-4xl font-semibold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          Skills
+          Skills and Technologies
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-gray-300">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 text-gray-300">
           {[
-            'HTML', 'CSS', 'JavaScript', 'React Js', 'Node Js', 'Express Js', 'Tailwind CSS', 'Python', 'Java', 'Flutter',
-            'Android Studio', 'Git', 'GitHub', 'Figma', 'IoT', 'Arduino IDE', 'C', 'C++', 'Dart',
-            'Web APIs', 'JSON', 'XML', 'SQL', 'MongoDB', 'MySQL', 'Firebase', 'Supabase', 'NoSQL', 'Problem Solving', 'Debugging',
-            'Cross-Platform Development', 'Mobile App Development', 'UI/UX Design', 'Responsive Web Design',
-            'Software Development Life Cycle (SDLC)', 'Continuous Integration/Continuous Deployment (CI/CD)',
-            'Cloud Computing', 'AWS', 'Azure', 'Google Cloud Platform',
+            'HTML', 'CSS', 'JavaScript', 'React Js', 'Node Js', 'Express Js', 'Tailwind CSS', 'Python', 'C Language', 'Android with Java', 'Flutter with Dart',
+            'Mobile App Development', 'Web App Development', 'Responsive Web Design', 'Cross-Platform Development',
           ].map((skill, index) => (
             <motion.div
               key={skill}
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3, delay: index * 0.05 }}
-              className="bg-gray-700 p-3 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300"
+              className="bg-gray-700 p-3 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300 cursor-pointer"
             >
               {skill}
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* Databases Section */}
+      <motion.section
+        id="databases"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="p-8 text-center"
+      >
+        <h2 className="text-3xl md:text-4xl font-semibold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Databases
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 text-gray-300">
+          {[
+            'MongoDB', 'Firebase', 'Supabase',
+          ].map((database, index) => (
+            <motion.div
+              key={database}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="bg-gray-700 p-3 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300 cursor-pointer"
+            >
+              {database}
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
+
+      {/* platforms Section */}
+      <motion.section
+        id="platforms"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.8 }}
+        className="p-8 text-center"
+      >
+        <h2 className="text-3xl md:text-4xl font-semibold mb-6 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Platforms
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 text-gray-300">
+          {[
+            'Visual Studio Code', 'Android Studio', 'PyCharm', 'Dev C++', 'Arduino IDE', 'GitHub', 'XAMPP', 'Postman', 'Kali Linux',
+          ].map((platforms, index) => (
+            <motion.div
+              key={platforms}
+              initial={{ opacity: 0, scale: 0.8 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              className="bg-gray-700 p-3 rounded-lg hover:bg-blue-600 hover:text-white transition duration-300 cursor-pointer"
+            >
+              {platforms}
             </motion.div>
           ))}
         </div>
@@ -157,9 +297,31 @@ function App() {
         <h2 className="text-3xl md:text-4xl font-semibold mb-6 text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
           Contact Me
         </h2>
+
         <form
-          action="https://formspree.io/f/YOUR_FORMSPREE_ID"
-          method="POST"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setIsLoading(true);
+            const name = e.target.name.value;
+            const email = e.target.email.value;
+            const message = e.target.message.value;
+
+            try {
+              await push(ref(db, 'portfolio-contact'), {
+                name,
+                email,
+                message,
+                timestamp: new Date().toISOString()
+              });
+              alert("Message sent successfully!");
+              e.target.reset();
+            } catch (error) {
+              console.error("Error adding data: ", error);
+              alert("Error sending message, try again!");
+            } finally {
+              setIsLoading(false);
+            }
+          }}
           className="flex flex-col gap-4 bg-gray-800 p-6 rounded-2xl shadow-lg"
         >
           <input
@@ -167,29 +329,45 @@ function App() {
             name="name"
             placeholder="Your Name"
             required
-            className="p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+            disabled={isLoading}
+            className="p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 disabled:opacity-50"
           />
           <input
             type="email"
             name="email"
             placeholder="Your Email"
             required
-            className="p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+            disabled={isLoading}
+            className="p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 disabled:opacity-50"
           />
           <textarea
             name="message"
             placeholder="Your Message"
             rows="5"
             required
-            className="p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300"
+            disabled={isLoading}
+            className="p-3 rounded-md bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 disabled:opacity-50"
           ></textarea>
+
           <motion.button
             type="submit"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300"
+            disabled={isLoading}
+            whileHover={{ scale: isLoading ? 1 : 1.05 }}
+            whileTap={{ scale: isLoading ? 1 : 0.95 }}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            Send Message
+            {isLoading ? (
+              <>
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
+                />
+                Sending...
+              </>
+            ) : (
+              "Send Message"
+            )}
           </motion.button>
         </form>
         <p className="text-gray-300 text-center mt-4">
@@ -206,8 +384,9 @@ function App() {
       >
         <div className="flex justify-center gap-6 mb-4">
           <motion.a
-            href="https://www.linkedin.com/in/rajanikantfzd18/"
+            href="https://www.linkedin.com/in/rajanikanfzd18/"
             target="_blank"
+            rel="noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-gray-300 hover:text-blue-400 transition duration-300"
           >
@@ -216,6 +395,7 @@ function App() {
           <motion.a
             href="https://github.com/rajanikantfzd18/"
             target="_blank"
+            rel="noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-gray-300 hover:text-blue-400 transition duration-300"
           >
@@ -224,6 +404,7 @@ function App() {
           <motion.a
             href="https://facebook.com/rajanikantfzd18/"
             target="_blank"
+            rel="noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-gray-300 hover:text-blue-400 transition duration-300"
           >
@@ -232,6 +413,7 @@ function App() {
           <motion.a
             href="https://instagram.com/rajanikantfzd18/"
             target="_blank"
+            rel="noreferrer"
             whileHover={{ scale: 1.2 }}
             className="text-gray-300 hover:text-blue-400 transition duration-300"
           >
@@ -239,7 +421,7 @@ function App() {
           </motion.a>
         </div>
         <p className="text-gray-400 text-sm">
-          &copy; {new Date().getFullYear()} Rajani kant. All rights reserved.
+          &copy; {new Date().getFullYear()} Mr. Rajani kant. All rights reserved.
         </p>
       </motion.footer>
     </div>
