@@ -48,7 +48,7 @@ function App() {
               ))}
               <motion.li whileHover={{ scale: 1.1 }} transition={{ type: 'spring', stiffness: 300 }}>
                 <a
-                  href="https://drive.google.com/file/d/1xvxrE19qJBUMi7JLY5rDshYwkv4cgwRk/view?usp=sharing"
+                  href="https://drive.google.com/file/d/1er_bOOWKl01Acysb20JfRR_vYvgx3Gx1/view?usp=drive_link"
                   target="_blank"
                   rel="noreferrer"
                   className="text-green-400 hover:text-green-300 font-semibold transition duration-300"
