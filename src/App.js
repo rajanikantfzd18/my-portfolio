@@ -108,7 +108,7 @@ function App() {
                   transition={{ delay: menuItems.length * 0.1 }}
                 >
                   <a
-                    href="https://drive.google.com/file/d/1xvxrE19qJBUMi7JLY5rDshYwkv4cgwRk/view?usp=sharing"
+                    href="https://drive.google.com/file/d/1er_bOOWKl01Acysb20JfRR_vYvgx3Gx1/view?usp=drive_link"
                     target="_blank"
                     rel="noreferrer"
                     onClick={() => setIsMenuOpen(false)}
@@ -134,7 +134,7 @@ function App() {
         <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
           Mr. Rajani kant
         </h1>
-        <p className="text-lg md:text-xl text-gray-300">Web & App Developer | Building Ideas into Digital Reality</p>
+        <p className="text-lg md:text-xl text-gray-300">Web & App Developer | Building Ideas into Digital Reality | Innovator</p>
         <motion.a
           href="#contact"
           whileHover={{ scale: 1.05 }}
