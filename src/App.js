@@ -134,7 +134,7 @@ function App() {
         <h1 className="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
           Mr. Rajani kant
         </h1>
-        <p className="text-lg md:text-xl text-gray-300">Software Engineer | Web & App Developer | Innovator</p>
+        <p className="text-lg md:text-xl text-gray-300">Web & App Developer | Building Ideas into Digital Reality</p>
         <motion.a
           href="#contact"
           whileHover={{ scale: 1.05 }}
@@ -157,7 +157,7 @@ function App() {
         </h2>
         <p className="text-gray-300 max-w-3xl mx-auto text-lg">
           Passionate developer crafting modern, responsive, and scalable web and mobile applications. Expertise in React,
-          JavaScript, Tailwind CSS, and innovative IoT solutions.
+          JavaScript, Tailwind CSS, Android, Flutter, and innovative IoT solutions.
         </p>
       </motion.section>
 
@@ -177,9 +177,9 @@ function App() {
             { title: 'Retail Bazaar', desc: '8 Minutes Delivery App with Flutter', link: '#' },
             { title: 'Talkify', desc: 'Chatting App built with Java for Android', link: '#' },
             { title: 'BYA', desc: 'Book Your Appointment app using Java for Android', link: '#' },
+            { title: 'ARKON', desc: 'Personal AI Assistant using Python with Tkinter and OpenAI API', link: '#' },
             { title: 'Hospital Website', desc: 'Responsive website using React.js and Tailwind CSS, with a clean modern UI', link: 'https://sangamhospitals.com/' },
             { title: 'Corporate Website', desc: 'Responsive website using React.js and Tailwind CSS, with a clean modern UI', link: 'https://raisonconsultancyservices.com/' },
-            { title: 'ARKON', desc: 'Personal AI Assistant using Python with Tkinter and OpenAI API', link: '#' },
             { title: 'Student Attendance System', desc: 'IoT-based system using NodeMCU 8266', link: '#' },
             { title: 'Traffic Light Control', desc: 'Arduino UNO-based traffic management system', link: '#' },
             { title: 'Home Automation', desc: 'Fan and Light Control with NodeMCU 8266', link: '#' },
@@ -214,8 +214,8 @@ function App() {
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 text-gray-300">
           {[
-            'HTML', 'CSS', 'JavaScript', 'React Js', 'Node Js', 'Express Js', 'Tailwind CSS', 'Python', 'C Language', 'Android with Java', 'Flutter with Dart',
-            'Mobile App Development', 'Web App Development', 'Responsive Web Design', 'Cross-Platform Development',
+            'HTML', 'CSS', 'JavaScript', 'C Language', 'React Js', 'Tailwind CSS', 'Python with Django', 'Android with Java', 'Flutter with Dart',
+            'App Development', 'Web Development', 'Cross-Platform Development',
           ].map((skill, index) => (
             <motion.div
               key={skill}
